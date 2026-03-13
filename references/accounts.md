@@ -50,15 +50,14 @@ curl -H "Authorization: Bearer $TOKEN" \
 {
   "accountId": "550e8400-e29b-41d4-a716-446655440000",
   "address": "0x...",
-  "hasStealthMaterial": true,
-  "hasEnsName": true,
+  "isRegistered": true,
   "subdomain": "alice",
   "lastConsumedNonce": 42
 }
 ```
 
-- `hasStealthMaterial` — whether stealth keys are stored (required for generating addresses)
-- `subdomain` — claimed ENS name (e.g., `alice` means `alice.clkd.eth`)
+- `isRegistered` — whether the account is fully registered (always `true` for authenticated requests)
+- `subdomain` — claimed ENS name (e.g., `alice` means `alice.clkd.eth`), or `null`
 - `lastConsumedNonce` — last stealth address derivation nonce (`null` if none generated)
 
 ## Subdomains
