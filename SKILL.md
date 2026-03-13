@@ -24,8 +24,8 @@ Cloaked is a stealth wallet platform on Ethereum and Base. Every payment generat
 - **Never hardcode API keys** in generated code — always read from `CLKD_API_KEY` environment variable.
 - **Validate addresses** before using them — all Ethereum addresses must be checksummed (EIP-55).
 - **Amounts are in smallest units** (e.g., USDC has 6 decimals, so 1 USDC = `"1000000"`). Always confirm the token's `decimals` before constructing amounts.
-- **Idempotency**: include an `Idempotency-Key: <uuid>` header on mutating requests (`POST /quote`, `POST /submit`) to prevent duplicate transactions on retry.
-- **Quote expiry**: quotes lock funds and expire. Always submit promptly or call `POST /unlock` to release funds if the user cancels.
+- **Idempotency**: include an `Idempotency-Key: <uuid>` header on mutating requests (`POST /v1/accounts/{id}/quote`, `POST /v1/accounts/{id}/submit`) to prevent duplicate transactions on retry.
+- **Quote expiry**: quotes lock funds and expire. Always submit promptly or call `POST /v1/accounts/{id}/unlock` to release funds if the user cancels.
 
 ## Prerequisites
 
@@ -54,34 +54,33 @@ Authorization: Bearer $CLKD_API_KEY
 | Sepolia | 11155111 | Testnet |
 | Base Sepolia | 84532 | Testnet |
 
-Use `GET /supported-chains` for the full list with explorer URLs.
+Use `GET /v1/supported-chains` for the full list with explorer URLs.
 
 ## Quick Reference
 
 | Endpoint | Method | Auth | Description |
 |----------|--------|------|-------------|
-| `/nonce?address=` | GET | No | Get SIWE nonce |
-| `/verify` | POST | No | Complete SIWE sign-in, get JWT |
-| `/accounts/` | POST | Yes | Create stealth account |
-| `/accounts/{id}` | GET | Yes | Get account details |
-| `/accounts/{id}/balance` | GET | Yes | Get all balances |
-| `/accounts/{id}/balance/{chainId}` | GET | Yes | Get chain-specific balances |
-| `/accounts/{id}/balance/{chainId}/{token}` | GET | Yes | Get single token balance |
-| `/accounts/{id}/payment-address` | POST | Yes | Generate stealth receive address |
-| `/accounts/{id}/quote` | POST | Yes | Create send/swap/bridge quote |
-| `/accounts/{id}/submit` | POST | Yes | Submit signed transaction |
-| `/accounts/{id}/unlock` | POST | Yes | Cancel/release a quote lock |
-| `/accounts/{id}/swap-preview` | POST | Yes | Preview swap without locking |
-| `/accounts/{id}/max-sendable` | POST | Yes | Max sendable after fees |
-| `/accounts/{id}/max-swappable` | POST | Yes | Max swappable after fees |
-| `/accounts/{id}/activities` | GET | Yes | Confirmed transaction history |
-| `/accounts/{id}/activities/pending` | GET | Yes | In-flight transactions |
-| `/token-catalog` | GET | No | Full token list |
-| `/token-lookup?address=&chainId=` | GET | No | Look up token by address |
-| `/supported-chains` | GET | No | List supported chains |
-| `/subdomain/check?name=` | GET | No | Check subdomain availability |
-| `/.well-known/hpke-public-key` | GET | No | Server's HPKE public key |
-| `/.well-known/quote-signer-public-key` | GET | No | Quote verification key |
+| `/v1/nonce?address=` | GET | No | Get SIWE nonce |
+| `/v1/verify` | POST | No | Complete SIWE sign-in, get JWT |
+| `/v1/accounts/` | POST | Yes | Create stealth account |
+| `/v1/accounts/{id}` | GET | Yes | Get account details |
+| `/v1/accounts/{id}/balance` | GET | Yes | Get all balances |
+| `/v1/accounts/{id}/balance/{chainId}` | GET | Yes | Get chain-specific balances |
+| `/v1/accounts/{id}/balance/{chainId}/{token}` | GET | Yes | Get single token balance |
+| `/v1/accounts/{id}/payment-address` | POST | Yes | Generate stealth receive address |
+| `/v1/accounts/{id}/quote` | POST | Yes | Create send/swap/bridge quote |
+| `/v1/accounts/{id}/submit` | POST | Yes | Submit signed transaction |
+| `/v1/accounts/{id}/unlock` | POST | Yes | Cancel/release a quote lock |
+| `/v1/accounts/{id}/swap-preview` | POST | Yes | Preview swap without locking |
+| `/v1/accounts/{id}/max-spendable` | POST | Yes | Max spendable after fees |
+| `/v1/accounts/{id}/activities` | GET | Yes | Confirmed transaction history |
+| `/v1/accounts/{id}/activities/pending` | GET | Yes | In-flight transactions |
+| `/v1/token-catalog` | GET | No | Full token list |
+| `/v1/token-lookup?address=&chainId=` | GET | No | Look up token by address |
+| `/v1/supported-chains` | GET | No | List supported chains |
+| `/v1/subdomain/check?name=` | GET | No | Check subdomain availability |
+| `/v1/.well-known/hpke-public-key` | GET | No | Server's HPKE public key |
+| `/v1/.well-known/quote-signer-public-key` | GET | No | Quote verification key |
 
 ## Core Workflows
 
@@ -90,15 +89,15 @@ Use `GET /supported-chains` for the full list with explorer URLs.
 ```bash
 # All balances across all chains
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance
 
 # Single chain
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance/8453
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance/8453
 
 # Single token on a chain
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance/8453/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance/8453/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
 ```
 
 Response includes `available` (spendable), `pending` (in-flight), and `usdAmount` per token.
@@ -109,7 +108,7 @@ Response includes `available` (spendable), `pending` (in-flight), and `usdAmount
 curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"chainId": 8453}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/payment-address
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/payment-address
 ```
 
 Returns a one-time stealth address. Each call produces a new address — never reuse them.
@@ -134,7 +133,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "amountIn": "1000000",
     "slippageBps": 50
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/swap-preview
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/swap-preview
 ```
 
 ### 5. Read Transaction History
@@ -142,11 +141,11 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 ```bash
 # Confirmed transactions (paginated)
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  "https://api.clkd.xyz/accounts/$ACCOUNT_ID/activities?limit=20"
+  "https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/activities?limit=20"
 
 # In-flight transactions
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/activities/pending
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/activities/pending
 ```
 
 Activities are discriminated by `activityType`: `SEND`, `RECEIVE`, `SELF`, `SWAP`, `BRIDGE`. See [references/balances-activities.md](references/balances-activities.md) for response shapes.
@@ -177,7 +176,7 @@ Activities are discriminated by `activityType`: `SEND`, `RECEIVE`, `SELF`, `SWAP
 | USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
 | WETH | `0x4200000000000000000000000000000000000006` |
 
-Use `GET /token-catalog` for the complete list or `GET /token-lookup?address=&chainId=` for any token.
+Use `GET /v1/token-catalog` for the complete list or `GET /v1/token-lookup?address=&chainId=` for any token.
 
 ## Error Handling
 

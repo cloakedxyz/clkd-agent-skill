@@ -8,7 +8,7 @@ Each call generates a fresh one-time stealth address. Senders transfer tokens to
 curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"chainId": 8453, "memo": "Invoice #1234"}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/payment-address
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/payment-address
 ```
 
 ```json

@@ -5,7 +5,7 @@
 Register a new stealth account by submitting HPKE-encrypted key material. Requires a JWT from the SIWE flow.
 
 ```bash
-curl -X POST https://api.clkd.xyz/accounts/ \
+curl -X POST https://api.clkd.xyz/v1/accounts/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -29,7 +29,7 @@ Response:
 ### Validate Invite Code (before creating)
 
 ```bash
-curl "https://api.clkd.xyz/invite-codes/validate?code=MY_CODE"
+curl "https://api.clkd.xyz/v1/invite-codes/validate?code=MY_CODE"
 ```
 
 ```json
@@ -43,7 +43,7 @@ curl "https://api.clkd.xyz/invite-codes/validate?code=MY_CODE"
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID
 ```
 
 ```json
@@ -66,7 +66,7 @@ curl -H "Authorization: Bearer $TOKEN" \
 ### Check Availability
 
 ```bash
-curl "https://api.clkd.xyz/subdomain/check?name=alice"
+curl "https://api.clkd.xyz/v1/subdomain/check?name=alice"
 ```
 
 ```json
@@ -83,7 +83,7 @@ If unavailable: `{ "available": false, "reason": "taken" }` or `"blocked"`.
 curl -X POST -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"subdomain": "alice"}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/subdomain
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/subdomain
 ```
 
 ```json
@@ -100,7 +100,7 @@ The user can then receive payments at `alice.clkd.eth`.
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/subdomain/generate
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/subdomain/generate
 ```
 
 ```json
@@ -119,7 +119,7 @@ Accounts support multiple signers for multi-device or group (multi-sig) use.
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/signers
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/signers
 ```
 
 ```json
@@ -144,7 +144,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
     "ciphertext": "base64-encrypted",
     "encapsulatedKey": "base64-key"
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/signers
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/signers
 ```
 
 ```json
@@ -157,7 +157,7 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/config
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/config
 ```
 
 ```json
@@ -183,7 +183,7 @@ Recovery hierarchy: **Org** -> **Team** -> **Account**. Without a team, accounts
 ### Create Team
 
 ```bash
-curl -X POST https://api.clkd.xyz/teams/ \
+curl -X POST https://api.clkd.xyz/v1/teams/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -195,10 +195,10 @@ curl -X POST https://api.clkd.xyz/teams/ \
 ### Create Org
 
 ```bash
-curl -X POST https://api.clkd.xyz/orgs/ \
+curl -X POST https://api.clkd.xyz/v1/orgs/ \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"name": "Acme Corp"}'
 ```
 
-See the full API docs for `GET /teams/{id}`, `POST /teams/{id}/accounts`, `GET /orgs/{id}`.
+See the full API docs for `GET /v1/teams/{id}`, `POST /v1/teams/{id}/accounts`, `GET /v1/orgs/{id}`.

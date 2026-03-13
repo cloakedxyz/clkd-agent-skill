@@ -23,8 +23,8 @@ When building integrations:
 3. **Always use HTTPS.** The API enforces TLS — never downgrade to HTTP.
 4. **Validate all addresses** with EIP-55 checksumming before sending transactions.
 5. **Verify token decimals** before constructing amounts. Sending 1 USDC requires `"1000000"` (6 decimals), not `"1000000000000000000"` (18 decimals). Getting this wrong means sending 1 trillion times too much or too little.
-6. **Use idempotency keys** on `POST /quote` and `POST /submit` to prevent duplicate transactions on network retries.
-7. **Release locks promptly** — if a quote won't be submitted, call `POST /unlock` to free the funds. Locks auto-expire after the TTL (default 24h), but leaving funds locked blocks subsequent transactions.
+6. **Use idempotency keys** on `POST /v1/accounts/{id}/quote` and `POST /v1/accounts/{id}/submit` to prevent duplicate transactions on network retries.
+7. **Release locks promptly** — if a quote won't be submitted, call `POST /v1/accounts/{id}/unlock` to free the funds. Locks auto-expire after the TTL (default 24h), but leaving funds locked blocks subsequent transactions.
 8. **Respect rate limits.** Back off on `429` responses. Hitting rate limits repeatedly may result in temporary blocks.
 
 ## Error Handling

@@ -6,7 +6,7 @@
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance
 ```
 
 ```json
@@ -40,7 +40,7 @@ curl -H "Authorization: Bearer $CLKD_API_KEY" \
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance/8453
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance/8453
 ```
 
 Same response shape, filtered to the given chain.
@@ -49,7 +49,7 @@ Same response shape, filtered to the given chain.
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/balance/8453/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/balance/8453/0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913
 ```
 
 Returns a single balance object (not wrapped in an array). Returns a zero-balance object if the token has never been received.
@@ -62,7 +62,7 @@ Cursor-based pagination over on-chain transactions:
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  "https://api.clkd.xyz/accounts/$ACCOUNT_ID/activities?limit=20"
+  "https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/activities?limit=20"
 ```
 
 ```json
@@ -173,7 +173,7 @@ Pass `nextCursor` to get the next page:
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  "https://api.clkd.xyz/accounts/$ACCOUNT_ID/activities?limit=20&cursor=base64-cursor-string"
+  "https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/activities?limit=20&cursor=base64-cursor-string"
 ```
 
 When `nextCursor` is `null`, there are no more results.
@@ -184,7 +184,7 @@ In-flight transactions (queued, pending, stuck, recently confirmed):
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/activities/pending
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/activities/pending
 ```
 
 ```json
@@ -212,7 +212,7 @@ Statuses: `queued` -> `pending` -> `confirmed` | `stuck`. Recently confirmed tra
 ### Full Token List
 
 ```bash
-curl https://api.clkd.xyz/token-catalog
+curl https://api.clkd.xyz/v1/token-catalog
 ```
 
 ```json
@@ -238,7 +238,7 @@ curl https://api.clkd.xyz/token-catalog
 Look up any token by contract address:
 
 ```bash
-curl "https://api.clkd.xyz/token-lookup?address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&chainId=8453"
+curl "https://api.clkd.xyz/v1/token-lookup?address=0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913&chainId=8453"
 ```
 
 ```json
@@ -256,7 +256,7 @@ curl "https://api.clkd.xyz/token-lookup?address=0x833589fCD6eDb6E08f4c7C32D4f71b
 ## Supported Chains
 
 ```bash
-curl https://api.clkd.xyz/supported-chains
+curl https://api.clkd.xyz/v1/supported-chains
 ```
 
 ```json

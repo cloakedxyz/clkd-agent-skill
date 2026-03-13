@@ -20,7 +20,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "decimals": 6,
     "destinationAddress": "0xRecipientAddress"
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/quote
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/quote
 ```
 
 | Field | Description |
@@ -61,7 +61,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "intents": [...],
     "delegations": [...]
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/submit
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/submit
 ```
 
 Response:
@@ -84,7 +84,7 @@ If the user decides not to send, release the locked funds:
 curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"quoteId": "uuid-from-quote"}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/unlock
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/unlock
 ```
 
 ```json
@@ -110,7 +110,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "amountIn": "1000000",
     "slippageBps": 50
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/swap-preview
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/swap-preview
 ```
 
 ```json
@@ -142,7 +142,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "amountIn": "1000000",
     "slippageBps": 50
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/quote
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/quote
 ```
 
 Swap quote response includes pricing info:
@@ -166,7 +166,7 @@ Swap quote response includes pricing info:
 }
 ```
 
-Then sign and submit using the same `POST /submit` endpoint as sends.
+Then sign and submit using the same `POST /v1/accounts/{id}/submit` endpoint as sends.
 
 ## Bridge Tokens (Cross-Chain Swap)
 
@@ -185,32 +185,25 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
     "slippageBps": 50,
     "tokenOutChainId": 8453
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/quote
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/quote
 ```
 
 This bridges USDC from Ethereum to Base. The response includes `estimatedFillTimeMs` and `fillDeadline`.
 
-## Max Sendable / Swappable
+## Max Spendable
 
 Calculate the maximum amount after deducting relay fees:
 
 ```bash
-# Max sendable
 curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"chainId": 8453, "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/max-sendable
-
-# Max swappable
-curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"chainId": 8453, "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/max-swappable
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/max-spendable
 ```
 
 ```json
 {
-  "maxSendable": "950000",
+  "maxSpendable": "950000",
   "feeEstimate": "50000",
   "spendableCount": 3
 }
@@ -221,7 +214,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 Verify quote authenticity by checking the server's P-256 ECDSA signature:
 
 ```bash
-curl https://api.clkd.xyz/.well-known/quote-signer-public-key
+curl https://api.clkd.xyz/v1/.well-known/quote-signer-public-key
 ```
 
 ```json
@@ -241,7 +234,7 @@ For accounts with threshold > 1, quotes require multiple signers.
 
 ```bash
 curl -H "Authorization: Bearer $CLKD_API_KEY" \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/quotes
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/quotes
 ```
 
 ### Submit Signer's Signatures
@@ -256,7 +249,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
       {"intentIndex": 1, "signature": "0x..."}
     ]
   }' \
-  https://api.clkd.xyz/accounts/$ACCOUNT_ID/quotes/$QUOTE_ID/signatures
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/quotes/$QUOTE_ID/signatures
 ```
 
 When enough signers have signed (threshold met), the transaction is automatically relayed.
