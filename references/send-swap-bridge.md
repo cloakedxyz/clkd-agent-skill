@@ -193,14 +193,27 @@ This bridges USDC from Ethereum to Base. The response includes `estimatedFillTim
 
 ## Max Spendable
 
-Calculate the maximum amount after deducting relay fees:
+Calculate the maximum amount after deducting relay fees. The `type` field is required — swap has higher fees than send.
 
 ```bash
+# Max for a send
 curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"chainId": 8453, "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"}' \
+  -d '{"chainId": 8453, "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "type": "send"}' \
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/max-spendable
+
+# Max for a swap
+curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"chainId": 8453, "token": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", "type": "swap"}' \
   https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/max-spendable
 ```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `chainId` | Yes | Chain ID |
+| `token` | Yes | Token address (`0x...`) |
+| `type` | Yes | `"send"` or `"swap"` (swap has higher fees) |
 
 ```json
 {
