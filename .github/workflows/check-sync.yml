@@ -1,0 +1,17 @@
+name: Check API Sync
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Every Monday at 9am UTC
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check endpoint coverage
+        run: bash scripts/check-sync.sh

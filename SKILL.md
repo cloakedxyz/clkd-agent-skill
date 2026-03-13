@@ -191,3 +191,31 @@ All errors follow this shape:
 ```
 
 Common status codes: `400` (validation), `401` (missing/invalid token), `404` (account not found), `429` (rate limited), `502`/`503` (upstream service down — retry with backoff).
+
+<!-- sync:operations
+checkSubdomainAvailability
+claimSubdomain
+createAccount
+createPaymentAddress
+createQuote
+createSwapPreview
+generateSubdomain
+getAccount
+getActivities
+getBalances
+getChainBalances
+getHpkePublicKey
+getMaxSpendable
+getNonce
+getPendingActivities
+getQuoteSignerPublicKey
+getTokenBalance
+getTokenCatalog
+listSupportedChains
+logout
+lookupToken
+resolveEns
+submitTransaction
+unlockQuote
+verifySignin
+-->
