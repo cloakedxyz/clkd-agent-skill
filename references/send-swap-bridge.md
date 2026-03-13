@@ -124,7 +124,8 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
   "slippageBps": 50,
   "feeEstimate": "50000000000000",
   "protocolFeeBps": 0,
-  "protocolFeeAmount": "0"
+  "protocolFeeAmount": "0",
+  "priceImpact": "0.01"
 }
 ```
 
@@ -203,7 +204,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 
 ```json
 {
-  "maxSpendable": "950000",
+  "maxAmount": "950000",
   "feeEstimate": "50000",
   "spendableCount": 3
 }

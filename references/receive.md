@@ -14,7 +14,6 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 ```json
 {
   "address": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD38",
-  "chainId": 8453,
   "nonce": "42"
 }
 ```
@@ -22,9 +21,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 | Field | Description |
 |-------|-------------|
 | `address` | One-time stealth address for receiving |
-| `chainId` | Chain the address is generated for (defaults to Sepolia if omitted) |
 | `nonce` | Derivation nonce (stringified bigint) |
-| `memo` | Optional — not stored on-chain, for your reference only |
 
 **Important:**
 - Never reuse a stealth address — generate a new one for each payment
