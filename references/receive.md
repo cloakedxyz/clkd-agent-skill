@@ -25,7 +25,7 @@ curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
 
 **Important:**
 - Never reuse a stealth address — generate a new one for each payment
-- The address works on the specified chain only
+- Stealth addresses work on any supported chain (they are cross-chain compatible)
 - Funds sent to the address will appear in the account's balance once indexed
 
 ## ENS Resolution

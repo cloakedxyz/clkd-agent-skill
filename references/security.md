@@ -12,7 +12,7 @@ Cloaked uses stealth addresses to provide on-chain privacy:
 
 - **Stealth material** is HPKE-encrypted before being sent to the server during account creation. The server stores encrypted keys and uses them for stealth address derivation.
 - **Private spending keys** never leave the client. The server cannot sign transactions — only the user's device can.
-- **Agents using API keys** can read balances, generate receive addresses, and create quotes, but cannot sign transactions without the private spending key.
+- **Agents using API keys** can read balances, generate receive addresses, and create quotes. To sign and submit transactions, the agent must hold `p_spend` and `child_p_view` — see [Agent Setup](agent-setup.md).
 
 ## Agent Safety Rules
 

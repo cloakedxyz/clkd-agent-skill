@@ -46,9 +46,19 @@ Response:
 }
 ```
 
-### Step 2: Sign the Intents
+### Step 2: Sign Intents and Delegations
 
-The client signs each intent using EIP-712 typed data with the account's private spending key. This is done client-side — the server never sees the private key.
+Each intent must be signed with the **derived stealth private key** — not `p_spend` directly. The intent's `eoa` is a stealth address, and the server verifies that the signature recovers to it.
+
+The signing flow:
+1. Read `derivationNonce` from each intent
+2. Reconstruct the ephemeral key using `deriveDeterministicEphemeralKey(childViewingNode, derivationNonce)`
+3. Compute the stealth private key using `genStealthPrivateKey({ p_spend, P_derived })`
+4. Sign the intent (EIP-712 typed data) and delegation (EIP-7702 authorization) with the stealth key
+
+The server sends `executionData` (ABI-encoded calls). For EIP-712, decode it back into a `Call[]` array using `decodeAbiParameters`.
+
+See [Agent Setup: Signing](agent-setup.md#3-sign-transactions) for the full implementation with code examples.
 
 ### Step 3: Submit the Signed Transaction
 

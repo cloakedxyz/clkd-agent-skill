@@ -134,7 +134,9 @@ curl -H "Authorization: Bearer $TOKEN" \
 }
 ```
 
-### Add Signer
+### Add Signer (HPKE-Encrypted)
+
+For browser/app clients using HPKE encryption:
 
 ```bash
 curl -X POST -H "Authorization: Bearer $TOKEN" \
@@ -145,6 +147,29 @@ curl -X POST -H "Authorization: Bearer $TOKEN" \
   }' \
   https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/signers
 ```
+
+### Add Signer (Plaintext — API Key Auth)
+
+For agents authenticating with API keys, submit key material directly without HPKE encryption:
+
+```bash
+curl -X POST -H "Authorization: Bearer $CLKD_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "P_spend": "0x04...",
+    "P_view": "0x04...",
+    "child_p_view": "0x..."
+  }' \
+  https://api.clkd.xyz/v1/accounts/$ACCOUNT_ID/signers
+```
+
+| Field | Description |
+|-------|-------------|
+| `P_spend` | Uncompressed public spending key (65 bytes, `0x04...`) |
+| `P_view` | Uncompressed public viewing key (65 bytes, `0x04...`) |
+| `child_p_view` | Child viewing private key (32 bytes, `0x...`) |
+
+See [Agent Setup](agent-setup.md) for key generation instructions.
 
 ```json
 {

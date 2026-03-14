@@ -32,11 +32,16 @@ Cloaked is a stealth wallet platform on Ethereum and Base. Every payment generat
 | Variable | Description |
 |----------|-------------|
 | `CLKD_API_KEY` | API key for server-to-server auth. Contact support@clkd.xyz to request one. |
+| `CLKD_ACCOUNT_ID` | Account UUID (provided when account is provisioned) |
+| `CLKD_P_SPEND` | Private spending key (generated during [agent setup](references/agent-setup.md)) |
+| `CLKD_CHILD_P_VIEW` | Child viewing private key (generated during [agent setup](references/agent-setup.md)) |
 
 The API key is passed as a Bearer token:
 ```
 Authorization: Bearer $CLKD_API_KEY
 ```
+
+`p_spend` and `child_p_view` are only needed client-side for signing — they are never sent to the API.
 
 ## Base URL
 
@@ -81,6 +86,16 @@ Use `GET /v1/supported-chains` for the full list with explorer URLs.
 | `/v1/subdomain/check?name=` | GET | No | Check subdomain availability |
 | `/v1/.well-known/hpke-public-key` | GET | No | Server's HPKE public key |
 | `/v1/.well-known/quote-signer-public-key` | GET | No | Quote verification key |
+
+## Agent Onboarding
+
+If you need to generate keys and enroll as a signer (first-time setup), see [Agent Setup](references/agent-setup.md). The flow is:
+
+1. **Generate keys** — `genKeys()` from `@cloakedxyz/clkd-stealth` + HD key derivation for child viewing key
+2. **Enroll signer** — `POST /v1/accounts/{id}/signers` with `{ P_spend, P_view, child_p_view }`
+3. **Store securely** — save `p_spend` and `child_p_view` (needed for signing transactions)
+
+After enrollment, the account can generate stealth addresses, create quotes, and sign transactions.
 
 ## Core Workflows
 
@@ -152,6 +167,7 @@ Activities are discriminated by `activityType`: `SEND`, `RECEIVE`, `SELF`, `SWAP
 
 ## Reference Files
 
+- [Agent Setup](references/agent-setup.md) — Key generation, signer enrollment, transaction signing
 - [Authentication](references/auth.md) — SIWE flow, API keys, JWT tokens
 - [Account Management](references/accounts.md) — Create accounts, subdomains, signers
 - [Receive](references/receive.md) — Stealth address generation, ENS resolution
