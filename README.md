@@ -1,5 +1,7 @@
 # Cloaked Agent Skill
 
+> **This skill is in active development and has not been audited. Use at your own risk.** APIs, schemas, and signing flows may change without notice. Do not use with mainnet funds unless you understand the risks.
+
 Agent skill for [Cloaked](https://clkd.xyz) — privacy-preserving stealth wallets on Ethereum and Base.
 
 This skill teaches AI agents how to interact with the Cloaked API to manage stealth accounts, check balances, send/swap/bridge tokens, and read transaction history.
